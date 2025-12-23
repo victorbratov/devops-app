@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 import { bookingsApi } from '@/lib/api';
@@ -8,7 +8,7 @@ import { Booking } from '@/types';
 import Navbar from '@/components/Navbar';
 import { format } from 'date-fns';
 
-export default function BookingsPage() {
+function BookingsContent() {
   const { isSignedIn, getToken } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -127,6 +127,26 @@ export default function BookingsPage() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function BookingsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 dark:bg-black">
+        <Navbar />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+            My Bookings
+          </h1>
+          <div className="text-center py-12">
+            <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+          </div>
+        </main>
+      </div>
+    }>
+      <BookingsContent />
+    </Suspense>
   );
 }
 
