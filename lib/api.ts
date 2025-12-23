@@ -9,6 +9,10 @@ const apiClient = axios.create({
   baseURL: USE_PROXY ? '/api' : API_BASE_URL,
 });
 
+const forecastApiClient = axios.create({
+  baseURL: 'http://localhost:8081',
+});
+
 // Handle errors - backend returns plain text error messages
 apiClient.interceptors.response.use(
   (response) => response,
@@ -65,8 +69,7 @@ export interface ForecastResponse {
 
 export const forecastApi = {
   getForecast: async (location: string, date: string): Promise<ForecastResponse> => {
-    // Use proxy API route to avoid CORS issues
-    const response = await apiClient.post<ForecastResponse>('/forecast', {
+    const response = await forecastApiClient.post<ForecastResponse>('/forecast', {
       location,
       date,
     });
