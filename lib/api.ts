@@ -75,6 +75,22 @@ export const forecastApi = {
 
 export function calculateDynamicPrice(basePrice: number, temperature: number): number {
   const diff = Math.abs(temperature - 21);
-  return basePrice + diff;
+  
+  let multiplier: number;
+  if (diff >= 0 && diff < 2) {
+    multiplier = 0.0; // No additional charge
+  } else if (diff >= 2 && diff < 5) {
+    multiplier = 0.1; // 10%
+  } else if (diff >= 5 && diff < 10) {
+    multiplier = 0.2; // 20%
+  } else if (diff >= 10 && diff < 20) {
+    multiplier = 0.3; // 30%
+  } else if (diff >= 20) {
+    multiplier = 0.5; // 50%
+  } else {
+    multiplier = 0.0;
+  }
+  
+  return basePrice * (1.0 + multiplier);
 }
 
